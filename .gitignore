@@ -1,0 +1,10 @@
+venv/*
+*.pyc
+.idea/*
+data/*
+results/*
+data/*
+raw_data/*
+text/*
+lda_html/*
+lda_results/*
