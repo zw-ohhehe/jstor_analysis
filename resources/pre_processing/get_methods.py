@@ -4,7 +4,7 @@ import os
 import json
 
 
-key_word = 'Method'
+key_words = ['Method','Materials and methods']
 word_list = ['Introduction', 'Results', 'Discussion']
 
 
@@ -36,16 +36,19 @@ def file2text(file):
 
 def get_methods(input_text):
     text = ''
-    if key_word.upper() in input_text:
-        text = input_text.split(key_word.upper())[1]
-        for word in word_list:
-            if word.upper() in text:
-                text = text.split(word.upper())[0]
-    if key_word in input_text:
-        text = input_text.split(key_word)[1]
-        for word in word_list:
-            if word in text:
-                text = text.split(word)[0]
+    for key_word in key_words:
+        if key_word.upper() in input_text:
+            text = input_text.split(key_word.upper())[1]
+            for word in word_list:
+                if word.upper() in text:
+                    text = text.split(word.upper())[0]
+        if key_word in input_text:
+            text = input_text.split(key_word)[1]
+            for word in word_list:
+                if word in text:
+                    text = text.split(word)[0]
+        if text:
+            return text
     return text
 
 
@@ -53,21 +56,23 @@ def load_file(path):
     texts = []
     num_files = 0
     num_methods = 0
-    for file in os.listdir(os.path.join(path, 'data')):
-        num_files += 1
-        parsed_result = file2text(os.path.join(path, 'data', file))
-        method_text = get_methods(parsed_result['text'])
-        if method_text:
-            token_text = stemming(remove_stop_words(tokenize(method_text)))
-            texts.append(token_text)
-            num_methods += 1
-        if num_files % 1000 == 0:
-            print(num_files, num_methods)
-    with open(os.path.join(path, 'text', 'method_6272'), 'w') as f:
-        json.dump(texts, f)
+    for folder in os.listdir(path):
+        for file in os.listdir(os.path.join(path, folder)):
+            num_files += 1
+            parsed_result = file2text(os.path.join(path, folder, file))
+            method_text = get_methods(parsed_result['text'])
+            if method_text:
+                token_text = stemming(remove_stop_words(tokenize(method_text)))
+                texts.append(token_text)
+                num_methods += 1
+            if num_files % 5000 == 0:
+                print(num_files, num_methods)
+    print("finished extraction")
     print(num_files, num_methods)
+    with open(os.path.join(os.getcwd(), 'text', 'method_full.json'), 'w') as f:
+        json.dump(texts, f)
 
 
 if __name__ == '__main__':
-    load_file(os.getcwd())
+    load_file('/home/renzi/Documents/Jstor_txt_data')
 
