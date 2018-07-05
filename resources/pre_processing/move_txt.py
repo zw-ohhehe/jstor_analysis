@@ -19,5 +19,6 @@ def move_txt(path, new_path):
                 if n % 10000 == 0:
                     print(n)
 
+
 if __name__ == '__main__':
     move_txt('/home/renzi/Documents/Jstor_data', '/home/renzi/Documents/Jstor_txt_data')

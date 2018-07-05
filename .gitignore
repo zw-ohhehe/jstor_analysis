@@ -8,3 +8,4 @@ raw_data/*
 text/*
 lda_html/*
 lda_results/*
+metadata/*
